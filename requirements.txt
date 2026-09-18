@@ -1,8 +1,6 @@
-pandas==3.0.5
-numpy==1.26.4
-matplotlib==3.8.3
-seaborn==0.13.2
-# Dependencias para Jupyter Notebook
+pandas
+numpy
+matplotlib
+seaborn
 jupyter
-nbconvert
-ipykernel
+notebook
