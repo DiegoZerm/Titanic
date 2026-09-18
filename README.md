@@ -1,333 +1,198 @@
-# Análisis Exploratorio del Titanic
+# Análisis exploratorio del dataset Titanic
 
-Proyecto de análisis exploratorio de datos utilizando el dataset **Titanic — Kaggle**.  
-La práctica se enfoca exclusivamente en **limpieza, preprocesamiento, análisis exploratorio y visualización**.
+Proyecto académico de análisis exploratorio de datos utilizando el dataset **Titanic**.
 
-> **Importante:** No se realiza ningún modelo de Machine Learning.
-
-## Fuente de datos
-
-Dataset Titanic — Kaggle:
-
-- https://www.kaggle.com/c/titanic/data
-
-Se utiliza principalmente el archivo `train.csv`.
-
-En este repositorio el archivo se encuentra como:
-
-```text
-dataset.csv
-```
+El proyecto se realiza exclusivamente con Python y análisis estadístico/descriptivo. **No se utiliza ningún modelo de Machine Learning.**
 
 ## Objetivo
 
-Analizar la información disponible de los pasajeros del Titanic para identificar características asociadas con la supervivencia.
+Explorar las características de los pasajeros del Titanic e identificar patrones descriptivos relacionados con la supervivencia.
 
-El análisis considera variables como:
+El análisis incluye:
 
-- Sexo
-- Edad
-- Clase del pasajero
-- Tarifa
-- Tamaño de la familia
-- Si el pasajero viajaba solo o acompañado
-- Puerto de embarque
-- Disponibilidad de información de cabina
+- Exploración inicial del dataset.
+- Número de registros y columnas.
+- Tipos de variables.
+- Valores faltantes.
+- Registros duplicados.
+- Estadísticas descriptivas.
+- Tratamiento de valores faltantes.
+- Transformación de variables.
+- Creación de nuevas variables.
+- Análisis de supervivencia.
+- Visualizaciones.
+- Conclusiones descriptivas.
 
 ## Estructura del proyecto
 
 ```text
-.
-├── 01-analisis.ipynb
-├── dataset.csv
+Titanic/
+├── data/
+│   └── dataset.csv
+├── resultados/
+│   └── (gráficas generadas automáticamente)
+├── analisis_titanic.py
 ├── requirements.txt
-└── README.md
+├── README.md
+└── .gitignore
 ```
 
-### Archivos
+## Dataset
 
-| Archivo | Descripción |
-|---|---|
-| `01-analisis.ipynb` | Notebook principal con todo el análisis |
-| `dataset.csv` | Dataset Titanic utilizado por el notebook |
-| `requirements.txt` | Dependencias necesarias para ejecutar el proyecto |
-| `README.md` | Documentación del proyecto |
-
-## Requisitos
-
-Se recomienda utilizar:
-
-- Python 3.11 o superior
-- Git
-- Jupyter Notebook o JupyterLab
-
-El proyecto no requiere Anaconda.
-
-## Clonar el repositorio
-
-Desde una terminal:
-
-```bash
-git clone <URL-DE-TU-REPOSITORIO>
-```
-
-Después entra a la carpeta:
-
-```bash
-cd <NOMBRE-DEL-REPOSITORIO>
-```
-
-Por ejemplo:
-
-```bash
-git clone https://github.com/TU-USUARIO/titanic-analisis.git
-cd titanic-analisis
-```
-
-## Crear el entorno virtual
-
-Linux/macOS:
-
-```bash
-python3 -m venv .venv
-```
-
-Activar el entorno:
-
-```bash
-source .venv/bin/activate
-```
-
-En Windows PowerShell:
-
-```powershell
-python -m venv .venv
-.venv\Scripts\Activate.ps1
-```
-
-## Instalar dependencias
-
-Con el entorno virtual activado:
-
-```bash
-pip install -r requirements.txt
-```
-
-Las principales librerías utilizadas son:
-
-- `pandas`
-- `numpy`
-- `matplotlib`
-- `seaborn`
-- `jupyter`
-- `notebook`
-
-## Ejecutar el notebook
-
-Con el entorno virtual activado, ejecuta:
-
-```bash
-jupyter notebook
-```
-
-o:
-
-```bash
-jupyter lab
-```
-
-Después abre:
+El archivo utilizado es:
 
 ```text
-01-analisis.ipynb
+data/dataset.csv
 ```
 
-### Importante sobre el dataset
+Debe conservar ese nombre y ubicación para que el script pueda encontrarlo automáticamente.
 
-El notebook utiliza:
+El dataset corresponde al conjunto de entrenamiento del Titanic utilizado habitualmente en Kaggle.
 
-```python
-pd.read_csv("dataset.csv")
-```
+## Variables analizadas
 
-Por lo tanto, `dataset.csv` debe encontrarse en la **misma carpeta que `01-analisis.ipynb`**.
+Entre las variables originales se encuentran:
 
-Si el repositorio se clona completo, no es necesario modificar ninguna ruta.
+- `PassengerId`
+- `Survived`
+- `Pclass`
+- `Name`
+- `Sex`
+- `Age`
+- `SibSp`
+- `Parch`
+- `Ticket`
+- `Fare`
+- `Cabin`
+- `Embarked`
 
-## Contenido del análisis
+Durante el análisis se crean las siguientes variables:
 
-### 1. Exploración inicial
+- `FamilySize`: tamaño de la familia del pasajero.
+- `IsAlone`: indica si el pasajero viajaba solo.
+- `AgeGroup`: categoría de edad.
+- `HasCabin`: indica si existía información de cabina.
 
-Se revisa:
+## Tratamiento de valores faltantes
 
-- Número de pasajeros
-- Número de columnas
-- Variables disponibles
-- Tipos de datos
-- Valores faltantes
-- Registros duplicados
-- Estadísticas descriptivas
+### Age
 
-### 2. Valores faltantes
+Los valores faltantes de `Age` se reemplazan utilizando la **mediana** de la columna. La mediana permite realizar la imputación sin verse tan afectada por valores extremos.
 
-Se analizan especialmente:
+### Cabin
 
-#### `Age`
+La columna `Cabin` presenta una gran cantidad de valores faltantes. Para conservar la información disponible, se crea `HasCabin`, que indica si existe un registro de cabina, y posteriormente se elimina `Cabin`.
 
-Los valores faltantes se reemplazan utilizando la **mediana** de la variable.
+### Embarked
 
-La mediana se utiliza porque es menos sensible a valores extremos que el promedio.
+Los pocos valores faltantes de `Embarked` se reemplazan utilizando la **moda**, es decir, la categoría más frecuente.
 
-#### `Cabin`
+## Nuevas variables
 
-Debido a la gran cantidad de valores faltantes, no se intenta reconstruir una cabina específica.
-
-Se crea:
-
-```text
-HasCabin
-```
-
-donde:
-
-- `1` = existe información de cabina
-- `0` = no existe información de cabina
-
-Después se elimina `Cabin` del dataset utilizado para el análisis.
-
-#### `Embarked`
-
-Los valores faltantes se reemplazan utilizando la **moda** de la variable, debido a que es una variable categórica.
-
-## Variables nuevas
-
-El notebook crea cuatro variables nuevas.
-
-### `FamilySize`
-
-Se calcula mediante:
+### FamilySize
 
 ```text
 FamilySize = SibSp + Parch + 1
 ```
 
-El `+1` representa al propio pasajero.
+Representa el tamaño de la familia considerando al pasajero.
 
-### `IsAlone`
+### IsAlone
 
-Indica si el pasajero viajaba solo:
+Toma el valor:
 
-```text
-1 = Solo
-0 = Acompañado
-```
+- `1`: viajaba solo.
+- `0`: viajaba acompañado.
 
-### `AgeGroup`
+### AgeGroup
 
-La edad se agrupa utilizando los siguientes criterios:
+Las edades se agrupan en:
 
-| Grupo | Rango |
-|---|---|
-| Niño | Menor de 13 años |
-| Joven | 13 a 17 años |
-| Adulto | 18 a 59 años |
-| Adulto mayor | 60 años o más |
+- Niño: menor de 13 años.
+- Joven: de 13 a 17 años.
+- Adulto: de 18 a 59 años.
+- Adulto mayor: 60 años o más.
 
-### `HasCabin`
+### HasCabin
 
-Indica si el registro original contenía información de cabina:
+Indica:
 
-```text
-1 = Sí
-0 = No
-```
+- `1`: existe información de cabina.
+- `0`: no existe información de cabina.
 
 ## Análisis realizados
 
-El notebook realiza los siguientes análisis:
+El script realiza, entre otros, los siguientes análisis:
 
-1. **Porcentaje de pasajeros que sobrevivió**
-2. **Supervivencia según sexo**
-3. **Supervivencia según clase del pasajero**
-4. **Supervivencia según grupo de edad**
-5. **Supervivencia según si el pasajero viajaba solo o acompañado**
+1. Tasa de supervivencia general.
+2. Supervivencia por sexo.
+3. Supervivencia por clase.
+4. Supervivencia por grupo de edad.
+5. Supervivencia según si viajaba solo o acompañado.
+6. Comparación de tarifas promedio y medianas según supervivencia.
 
 ## Visualizaciones
 
-Se generan cuatro visualizaciones principales:
+Al ejecutar el programa se generan automáticamente cuatro gráficas:
 
-1. Supervivencia general
-2. Tasa de supervivencia según sexo
-3. Tasa de supervivencia según clase
-4. Tasa de supervivencia según grupo de edad
+```text
+resultados/
+├── 01_supervivencia_general.png
+├── 02_supervivencia_por_sexo.png
+├── 03_supervivencia_por_clase.png
+└── 04_supervivencia_por_edad.png
+```
 
-Las gráficas se generan directamente desde el notebook utilizando `matplotlib` y `seaborn`.
+Las gráficas se generan utilizando **Matplotlib**.
 
-## Reproducibilidad
+## Instalación
 
-Para reproducir el análisis desde cero:
+Se recomienda utilizar un entorno virtual de Python.
+
+### 1. Crear el entorno virtual
 
 ```bash
-git clone <URL-DE-TU-REPOSITORIO>
-cd <NOMBRE-DEL-REPOSITORIO>
-
 python3 -m venv .venv
+```
+
+### 2. Activarlo
+
+En Linux/macOS:
+
+```bash
 source .venv/bin/activate
+```
 
+En Windows:
+
+```powershell
+.venv\Scripts\activate
+```
+
+### 3. Instalar dependencias
+
+```bash
 pip install -r requirements.txt
-
-jupyter lab
 ```
 
-Luego abre:
+## Ejecución
 
-```text
-01-analisis.ipynb
+Desde la carpeta raíz del proyecto:
+
+```bash
+python analisis_titanic.py
 ```
 
-y ejecuta las celdas en orden.
+El programa mostrará los resultados en la terminal y guardará las visualizaciones en la carpeta `resultados/`.
 
-El proyecto no requiere conexión a una base de datos ni servicios externos para ejecutar el análisis, siempre que `dataset.csv` esté incluido en el repositorio.
+## Conclusiones
 
-## Resultados y conclusiones
+Las conclusiones se generan directamente a partir de los resultados obtenidos en el dataset.
 
-El análisis permite observar diferencias descriptivas en la supervivencia de los pasajeros según distintas características.
+El análisis permite observar diferencias en las tasas de supervivencia según variables como sexo, clase, grupo de edad y condición de viaje solo o acompañado.
 
-Entre las variables analizadas se encuentran:
+Estas observaciones representan asociaciones descriptivas dentro del dataset y **no deben interpretarse como relaciones causales**.
 
-- Sexo
-- Clase
-- Edad
-- Tamaño de familia
-- Viajar solo o acompañado
+## Nota
 
-Los resultados corresponden específicamente al conjunto de datos utilizado y permiten realizar comparaciones entre grupos.
-
-> Una diferencia observada entre grupos no implica por sí misma una relación causal.
-
-## Tecnologías utilizadas
-
-- Python
-- Pandas
-- NumPy
-- Matplotlib
-- Seaborn
-- Jupyter Notebook
-
-## Machine Learning
-
-Este proyecto **no implementa modelos de Machine Learning**.
-
-El objetivo de la práctica es únicamente:
-
-```text
-Limpieza
-   ↓
-Preprocesamiento
-   ↓
-Análisis exploratorio
-   ↓
-Visualización
-   ↓
-Conclusiones
-```
+Este proyecto corresponde a un análisis exploratorio y descriptivo. **No contiene modelos de Machine Learning.**
